@@ -1,3 +1,38 @@
-h1 {
-    color:blue
+body {
+    margin: 0;
+}
+.bigLogin{
+    width: 100vw;
+    height: 100vh;
+    background-image: url(./help.jpg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.imgLogin{
+    width: 50vw;
+    height: 100vh;
+    background-color: rgb(122, 6, 175);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.imgLogin > h1  {
+    color: rgb(255, 0, 221);
+}
+.regLogin{
+    width: 50vw;
+    height: 100vh;
+    background-color: rgb(9, 134, 128);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.cardLogin{
+ width: 60%;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ flex-direction: column;
 }
