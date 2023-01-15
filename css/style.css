@@ -4,7 +4,7 @@ body {
 .bigLogin{
     width: 100vw;
     height: 100vh;
-    background-image: url(./help.jpg);
+    background-color: aqua;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,14 +12,14 @@ body {
 .imgLogin{
     width: 50vw;
     height: 100vh;
-    background-color: rgb(122, 6, 175);
+    background-color: rgb(93, 6, 175);
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 .imgLogin > h1  {
-    color: rgb(255, 0, 221);
+    color: rgb(0, 255, 34);
 }
 .regLogin{
     width: 50vw;
