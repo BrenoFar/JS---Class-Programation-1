@@ -14,10 +14,18 @@ var produtosPreco = []
 var vendasCodigo = []
 var vendasValor = []
 var vendasDesc = []
-var vendasVendedor = []
+var vendasVendedorCod = []
+var vendedoresValorVendas = []
+var produtosDescricaoSet = new Set(produtosDescricao)
+var produtosCodigoSet = new Set(produtosCodigo)
+var vendedoresNomeSet = new Set(vendedoresNome)
+var vendedoresCodigoSet = new Set(vendedoresCodigo)
+var vendasCodigoSet = new Set(vendasCodigo)
+const vendMap = new Map()
 
 var aux=1
     while (aux!=0){
+        console.clear()
         aux=Number(tela.menuPrincipal())
         if (aux==0) {
             console.clear()
@@ -25,6 +33,7 @@ var aux=1
         } else if (aux==1) {
             var aux2=1
             while (aux2!=0){
+                console.clear()
                 aux2=Number(tela.menuGestor())
                 if (aux2==0) {
                     console.clear()
@@ -43,9 +52,15 @@ var aux=1
                                 break bloco_cadVendedor
                             }
                             if (!vendedoresCodigo.includes(codVendedor)){ // FAZ A VALIDAÇÃO SE JÁ O TEM CODIGO
-                                var nomeVendedor = (prompt("Nome do vendedor..: "))
-                                vendedoresCodigo.push(codVendedor)
-                                vendedoresNome.push(nomeVendedor)
+                                if (!vendMap.has(codVendedor)){ // FAZ A VALIDAÇAO DENTRO DO MAP TAMBEM
+                                    var nomeVendedor = (prompt("Nome do vendedor..: "))
+                                    vendedoresCodigo.push(codVendedor)
+                                    vendedoresCodigoSet.add(codVendedor)
+                                    vendedoresNome.push(nomeVendedor.toUpperCase())
+                                    vendedoresValorVendas.push(0.0)
+                                    vendMap.set(codVendedor,nomeVendedor.toUpperCase()) // ADICIONAR NO MAP()
+                                }           
+                                
                             }
                                 console.log("================================================================")
                         }
@@ -59,9 +74,15 @@ var aux=1
                         console.log("\nCódigo do vendedor: "+vendedoresCodigo[i]+"\nNome do vendedor..: "+vendedoresNome[i],"\n\n")
                     }
                     console.log("\nExibindo vendedores, para remover um, basta colocar seu código")
+
+                    
                     //LISTA DOS VENDEDORES SENDO EXIBIDA//
                     console.log("================================================================")
                     var eExibirVendedores = Number(prompt("Código do vendedor para ser apagado (0 para voltar): "))
+                    console.log(vendMap)
+                    console.log(vendMap.delete(eExibirVendedores)) // VERIFICACAO NO MAP()
+                    console.log(vendMap)
+
                     if (eExibirVendedores == 0) {
                         console.clear()
                         console.log("=============================GESTOR=============================")
@@ -70,10 +91,12 @@ var aux=1
                         var indiceVendedor = vendedoresCodigo.indexOf(eExibirVendedores)
                         vendedoresCodigo.splice(indiceVendedor,1)
                         vendedoresNome.splice(indiceVendedor,1)
+                        vendedoresNomeSet.delete(vendedoresNome[indiceVendedor])
+                        vendedoresCodigoSet.delete(vendedoresCodigo[indiceVendedor])
                         console.clear()
                         console.log("=============================GESTOR=============================")
                         prompt("Vendedor removido com sucesso!")
-
+                        
                         ///REMOVENDO VENDEDOR COM O CÓDIGO INFORMADO
                     }
                     console.log("================================================================")
@@ -90,13 +113,25 @@ var aux=1
                             if (apoio==0) {
                                 break bloco_cadProduto
                             }
-                            if (!produtosCodigo.includes(codProduto))
-                            { // FAZ A VALIDAÇÃO SE JÁ O TEM CODIGO
-                                var nomeProduto = (prompt("Nome do produto..: "))
-                                var precoProduto = Number(prompt("Preço do produto.: "))
-                                produtosCodigo.push(codProduto)
-                                produtosDescricao.push(nomeProduto)
-                                produtosPreco.push(precoProduto)
+                            if (!produtosCodigo.includes(codProduto)) { // FAZ A VALIDAÇÃO SE JÁ O TEM CODIGO
+                                bloco_cadProdutoNome:{
+                                    var nomeProduto = (prompt("Nome do produto..: "))
+                                    var nomeDoProduto=nomeProduto.toUpperCase()
+                                    if (produtosDescricaoSet.has(nomeDoProduto)){
+                                        prompt("\nEsse produto já tem cadastrado! Operação cancelada.")
+                                        break bloco_cadProdutoNome
+                                    } else {
+                                        var precoProduto = Number(prompt("Preço do produto.: "))
+                                        produtosCodigo.push(codProduto)
+                                        produtosDescricao.push(nomeProduto.toUpperCase())
+                                        produtosPreco.push(precoProduto)
+                                        //uso do SET
+                                        produtosDescricaoSet.add(nomeDoProduto)
+                                        produtosCodigoSet.add(codProduto)
+                                    }
+                                }
+                            } else {
+                                prompt("\nEsse código de produto já está em uso!")
                             }
 
                             console.log("================================================================")
@@ -124,6 +159,8 @@ var aux=1
                         produtosCodigo.splice(indiceProduto,1)
                         produtosDescricao.splice(indiceProduto,1)
                         produtosPreco.splice(indiceProduto,1)
+                        produtosDescricaoSet.delete(produtosDescricao[indiceProduto])
+                        produtosCodigoSet.delete(produtosCodigo[indiceProduto])
                         
                         console.clear()
                         console.log("=============================GESTOR=============================")
@@ -137,10 +174,12 @@ var aux=1
                     console.log("=============================GESTOR=============================")
                     console.log("1. Relatório por vendedor")
                     console.log("2. Relatório geral")
+                    console.log("3. Relatório de prêmiação")
                     console.log("0. Voltar")
                     console.log("================================================================")
                     aux3 = Number(prompt("Digite uma das opções acima: "))
                     console.log("================================================================")
+                    console.clear()
                     if (aux3==1) {
                         console.clear()
                         console.log("=============================GESTOR=============================")
@@ -154,8 +193,8 @@ var aux=1
                             var indiceVendedor=0
                             var tamanhoIndicesVendedorVendas=0
                             console.clear()
-                            indicesVendedorVendas = funcVenda.descobreVendasVendedor(codVendedorExibirVenda, vendasVendedor)
-                            tamanhoIndicesVendedorVendas = funcVenda.descobreTamanhoVendasVendedor(codVendedorExibirVenda, vendasVendedor)
+                            indicesVendedorVendas = funcVenda.descobreVendasVendedor(codVendedorExibirVenda, vendasVendedorCod)
+                            tamanhoIndicesVendedorVendas = funcVenda.descobreTamanhoVendasVendedor(codVendedorExibirVenda, vendasVendedorCod)
                             if (tamanhoIndicesVendedorVendas==0){
                                 console.log("O vendedor não tem vendas!")
                             } else {
@@ -166,7 +205,7 @@ var aux=1
                                     indiceVendedor=indicesVendedorVendas[cont]
                                     console.log("Venda "+(cont+1)+": ")
                                     console.log("================================================================")
-                                    console.log("\nCódigo da venda.....: "+vendasCodigo[indiceVendedor]+"\nCódigo do vendedor..: "+vendasVendedor[indiceVendedor]+"\nValor total da venda: R$ "+vendasValor[indiceVendedor].toFixed(2))
+                                    console.log("\nCódigo da venda.....: "+vendasCodigo[indiceVendedor]+"\nCódigo do vendedor..: "+vendasVendedorCod[indiceVendedor]+"\nValor total da venda: R$ "+vendasValor[indiceVendedor].toFixed(2))
                                     console.log("\nDescrição da venda..: "+vendasDesc[indiceVendedor])
                                     console.log("\n\n\n\n================================================================")
                                 }
@@ -183,10 +222,31 @@ var aux=1
                             console.log("================================================================")
                             console.log("Venda "+(i+1)+": ")
                             console.log("================================================================")
-                            console.log("\nCódigo da venda...: "+vendasCodigo[i]+"\nValor da venda....: "+valoresReal[i],"\n"+"\nCódigo do vendedor: "+vendasVendedor[i],"\n")
+                            console.log("\nCódigo da venda...: "+vendasCodigo[i]+"\nValor da venda....: "+valoresReal[i],"\n"+"\nCódigo do vendedor: "+vendasVendedorCod[i],"\n")
                             console.log("================================================================")
                         }
                             //CÓDIGO DO RELATÓRIO GERAL
+                        console.log("================================================================")
+                        prompt()
+                        console.clear()
+                    } else if (aux3==3) {
+                        console.clear()
+                        let ordemPremiadosInvertida = []
+                        let ordemPremiados = []
+                        ordemPremiadosInvertida = vendedoresValorVendas.sort()
+                        console.log("Menor para o maior: ", ordemPremiadosInvertida)
+                        ordemPremiados = ordemPremiadosInvertida.reverse()
+                        console.log("Maior para o menor: ",ordemPremiados)
+                        let [primeiro, segundo, terceiro] = ordemPremiados
+                        var indicePrimeiro = vendedoresValorVendas.indexOf(primeiro)
+                        var indiceSegundo = vendedoresValorVendas.indexOf(segundo)
+                        var indiceTerceiro = vendedoresValorVendas.indexOf(terceiro)
+                        console.clear()
+                        console.log("=============================GESTOR=============================")
+                        console.log("================================================================")
+                        console.log ("\n1º lugar nas vendas: \n",vendedoresNome[indicePrimeiro],"\ncom R$ ", vendedoresValorVendas[indicePrimeiro].toFixed(2))
+                        console.log ("\n2º lugar nas vendas: \n",vendedoresNome[indiceSegundo],"\ncom R$ ", vendedoresValorVendas[indiceSegundo].toFixed(2))
+                        console.log ("\n3º lugar nas vendas: \n",vendedoresNome[indiceTerceiro],"\ncom R$ ", vendedoresValorVendas[indiceTerceiro].toFixed(2))
                         console.log("================================================================")
                         prompt()
                         console.clear()
@@ -232,13 +292,35 @@ var aux=1
                         }
                     }
                     console.log("================================================================")
-                    var codVenda=Number(prompt("Informe o código dessa venda............: "))
-                    var codVendedorVenda=Number(prompt("Informe o código do vendedor dessa venda: "))
+                    var repeteVenda1=1
+                    var repeteVenda2=1
+                    while (repeteVenda1!=0) {
+                        console.clear()
+                        var codVenda=Number(prompt("Informe o código dessa venda............: "))
+                        if (vendasCodigoSet.has(codVenda)){
+                            prompt("\nEsse código de venda já está em uso! Escolha outro!")
+                        } else {
+                            repeteVenda1=0
+                        }
+                    }
+                    while (repeteVenda2!=0) {
+                        console.clear()
+                        var codVendedorVenda=Number(prompt("Informe o código do vendedor dessa venda: "))
+                        if (!vendedoresCodigoSet.has(codVendedorVenda)){
+                            prompt("\nEsse código de vendedor não existe!")
+                        } else {
+                            repeteVenda2=0
+                        }
+                    }
                     console.log("================================================================")
+                    
                     vendasCodigo.push(codVenda)
                     vendasValor.push(valorTotalVenda)
                     vendasDesc.push(descProdVenda)
-                    vendasVendedor.push(codVendedorVenda)
+                    vendasVendedorCod.push(codVendedorVenda)
+                    vendasCodigoSet.add(codVenda)
+                    var indiceVendedor = vendedoresCodigo.indexOf(codVendedorVenda)
+                    vendedoresValorVendas[indiceVendedor]=vendedoresValorVendas[indiceVendedor]+valorTotalVenda
                     prompt("VENDA CADASTRADA!")
                 }
             }
